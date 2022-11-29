@@ -78,6 +78,13 @@ func run(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("GetExternalID failed on: %w", err)
 	}
 
+	cloudProvider, err := ocmClient.GetCloudProvider(externalClusterID)
+	if err != nil {
+		return fmt.Errorf("GetCloudProvider failed on: %w", err)
+	} else if cloudProvider != "aws" {
+		return fmt.Errorf("cloudprovider is not supported: %s", cloudProvider)
+	}
+
 	eventType, err := pdClient.ExtractEventTypeFromPayload(payloadPath, pagerduty.RealFileReader{})
 	if err != nil {
 		return fmt.Errorf("could not determine event type: %w", err)
@@ -303,19 +310,19 @@ func evaluateRestoredCluster(chgmClient chgm.Client, externalClusterID string) e
 
 // retryUntilServiceObtained attempts to retrieve the serviceID from the PD payload, retrying until successful
 func retryUntilServiceObtained(chgmClient chgm.Client) string {
-		// Retrieve the service to alert on, retrying until we succeed
-		serviceID, err := chgmClient.ExtractServiceIDFromPayload(payloadPath, pagerduty.RealFileReader{})
-		retries := 1
-		for err != nil {
-			fmt.Printf("Failed to retrieve service from PagerDuty, retrying (attempt %d). Error encountered: %v\n", retries, err)
+	// Retrieve the service to alert on, retrying until we succeed
+	serviceID, err := chgmClient.ExtractServiceIDFromPayload(payloadPath, pagerduty.RealFileReader{})
+	retries := 1
+	for err != nil {
+		fmt.Printf("Failed to retrieve service from PagerDuty, retrying (attempt %d). Error encountered: %v\n", retries, err)
 
-			// Sleep for a time, based on the number of retries (up to 300 seconds)
-			sleepBeforeRetrying(retries, 300)
-			retries++
+		// Sleep for a time, based on the number of retries (up to 300 seconds)
+		sleepBeforeRetrying(retries, 300)
+		retries++
 
-			serviceID, err = chgmClient.ExtractServiceIDFromPayload(payloadPath, pagerduty.RealFileReader{})
-		}
-		return serviceID
+		serviceID, err = chgmClient.ExtractServiceIDFromPayload(payloadPath, pagerduty.RealFileReader{})
+	}
+	return serviceID
 }
 
 // sleepBeforeRetrying sleeps with an exponential backoff based on the current retry, up to the given maximum sleep time.
