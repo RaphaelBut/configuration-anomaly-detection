@@ -352,9 +352,6 @@ func (c Client) investigateStartedInstances() (InvestigateInstancesOutput, error
 	if err != nil {
 		return InvestigateInstancesOutput{}, fmt.Errorf("could not retrieve non running instances while investigating started instances for %s: %w", infraID, err)
 	}
-	if len(stoppedInstances) != 0 {
-		return InvestigateInstancesOutput{UserAuthorized: true, Error: "non running instances found: cluster has not fully started or has excess machines"}, nil
-	}
 
 	runningNodesCount, err := c.GetRunningNodesCount(infraID)
 	if err != nil {
@@ -366,7 +363,7 @@ func (c Client) investigateStartedInstances() (InvestigateInstancesOutput, error
         return InvestigateInstancesOutput{}, fmt.Errorf("could not retrieve expected cluster nodes count while investigating started instances for %s: %w", infraID, err)
 	}
 
-    // Check for mistmach in running nodes and expected nodes
+    // Check for mismatch in running nodes and expected nodes
 	if runningNodesCount.Master != expectedNodesCount.Master {
 		return InvestigateInstancesOutput{UserAuthorized: true, Error: "number of running master node instances does not match the expected master node count: quota may be insufficient or irreplaceable machines have been terminated"}, nil
 	}
