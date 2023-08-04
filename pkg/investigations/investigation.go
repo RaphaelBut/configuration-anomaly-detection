@@ -86,6 +86,5 @@ func (a AlertType) String() string {
 		return "SilenceAlerts"
 	default:
 		return "Unsupported"
-
 	}
 }
