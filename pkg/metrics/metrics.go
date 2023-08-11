@@ -15,6 +15,7 @@ const (
 	investigate    = "investigate"
 	alertTypeLabel = "alert_type"
 	eventTypeLabel = "event_type"
+	summaryTypeLabel = "summary_type"
 )
 
 // Push collects and pushes metrics to the configured pushgateway
@@ -52,7 +53,7 @@ var (
 // LimitedSupportLifted is a metric counting investigations ending with lifting a limited support reason
 // Labeled with alert and event type
 var (
-	LimitedSupportLifted     = prometheus.NewCounterVec(limitedSupportLiftedOpts, []string{alertTypeLabel, eventTypeLabel})
+	LimitedSupportLifted     = prometheus.NewCounterVec(limitedSupportLiftedOpts, []string{alertTypeLabel, eventTypeLabel, summaryTypeLabel})
 	limitedSupportLiftedOpts = prometheus.CounterOpts{Namespace: namespace, Subsystem: investigate, Name: "limitedsupport_lifted"}
 )
 
