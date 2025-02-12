@@ -26,6 +26,9 @@ build: build-interceptor build-cadctl build-template-updater ## Build all subpro
 .PHONY: lint
 lint: lint-cadctl lint-interceptor lint-template-updater ## Lint all subprojects
 
+.PHONY: test
+test: test-cadctl test-interceptor
+
 ##@ cadctl:
 .PHONY: cadctl
 cadctl: generate-cadctl build-cadctl test-cadctl lint-cadctl generate-template-file ## Run all targets for cadctl (generate, build, test, lint, generation)
