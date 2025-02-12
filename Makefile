@@ -57,7 +57,7 @@ test-cadctl: check-go121-install ## Run automated tests for cadctl
 
 ##@ Interceptor:
 .PHONY: interceptor
-interceptor: build-interceptor test-interceptor lint-interceptor ## Run all targets for interceptor (build, test, lint)
+interceptor: build-interceptor test-interceptor test-interceptor-e2e lint-interceptor ## Run all targets for interceptor (build, test, lint)
 
 .PHONY: build-interceptor
 build-interceptor: check-go121-install ## Build the interceptor binary
@@ -72,10 +72,13 @@ lint-interceptor: install-linter ## Lint interceptor subproject
 	cd interceptor && GOLANGCI_LINT_CACHE=$$(mktemp -d) $(GOPATH)/bin/golangci-lint run -c ../.golangci.yml
 
 .PHONY: test-interceptor
-test-interceptor: check-go121-install check-jq-install check-vault-install build-interceptor ## Run automated tests for interceptor
+test-interceptor: check-go121-install check-jq-install build-interceptor ## Run automated tests for interceptor
 	@echo
 	@echo "Running unit tests for interceptor..."
 	cd interceptor && go test -race -mod=readonly ./...
+
+.PHONY: test-interceptor-e2e
+test-interceptor-e2e: check-go121-install check-jq-install check-vault-install build-interceptor ## Run automated tests for interceptor
 	@echo
 	@echo "Running e2e tests for interceptor..."
 	cd interceptor && ./test/e2e.sh
