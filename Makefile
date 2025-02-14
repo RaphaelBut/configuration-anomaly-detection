@@ -78,7 +78,7 @@ test-interceptor: check-go121-install check-jq-install build-interceptor ## Run 
 	cd interceptor && go test -race -mod=readonly ./...
 
 .PHONY: test-interceptor-e2e
-test-interceptor-e2e: check-go121-install check-jq-install check-vault-install build-interceptor ## Run automated tests for interceptor
+test-interceptor-e2e: check-go121-install check-jq-install check-vault-install build-interceptor ## Run e2e tests for interceptor
 	@echo
 	@echo "Running e2e tests for interceptor..."
 	cd interceptor && ./test/e2e.sh
