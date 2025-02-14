@@ -72,7 +72,7 @@ lint-interceptor: install-linter ## Lint interceptor subproject
 	cd interceptor && GOLANGCI_LINT_CACHE=$$(mktemp -d) $(GOPATH)/bin/golangci-lint run -c ../.golangci.yml
 
 .PHONY: test-interceptor
-test-interceptor: check-go121-install check-jq-install build-interceptor ## Run automated tests for interceptor
+test-interceptor: check-go121-install check-jq-install build-interceptor ## Run unit tests for interceptor
 	@echo
 	@echo "Running unit tests for interceptor..."
 	cd interceptor && go test -race -mod=readonly ./...
